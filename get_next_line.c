@@ -102,29 +102,65 @@ char			*ft_substr(char *s, int start, int len)
 	if (!s || start >= ft_strlen(s))
 		return (NULL);
 	if (start + len <= ft_strlen(s))
-		l = start + len;
+		l = start + len + 1;
 	else
-		l = ft_strlen(s) - start;
+		l = ft_strlen(s) - start + 1;
 	if (!(new = malloc(l*sizeof(char))))
 		return (NULL);
-	ft_strncpy(new, &s[start], len);
+int i = 0;
+	new[l-1]='\0';
+	while(i<l-1){
+	new[i]=s[start];
+	i++;
+	start++;
+	}
+	//ft_strncpy(new, &s[start], l-1);
 	return (new);
 }
 
-/*void	ft_bzero(static *s[FD_SIZE])
+/*void	ft_bzero(void *s, size_t n)
 {
-	int i;
+	unsigned char *str;
 
-	while(*s[FD_SIZE])
+	str = s;
+	while (n)
 	{
-	i = 0;
-		while (s[FD_SIZE][i])
-		{
-			s[FD_SIZE][i] = 0;
-			i++;
-		}
-	FD_SIZE--;
+		*str = 0;
+		str++;
+		n--;
 	}
+}*/
+/*static char		*ft_strnew(size_t size)
+{
+	char	*s;
+
+	if (!(s = (char *)malloc(sizeof(char) * (size + 1))))
+		return (NULL);
+	ft_bzero(s, size + 1);
+	return (s);
+}*/
+
+
+/*char			*ft_substr(char  *s, int start, int len)
+{
+	int	i;
+	char	*tab;
+
+	if (!s)
+		return (0);
+	if (start > ft_strlen(s))
+	{
+		if (!(tab = ft_strnew(1)))
+			return (0);
+		return (tab);
+	}
+	i = 0;
+	while (s[start + i] && i < len)
+		i++;
+	if (!(tab = ft_strnew(i)))
+		return (0);
+	ft_strncpy(tab, &s[start], len);
+	return (tab);
 }*/
 int get_next_line(int fd, char **line)
 {
@@ -149,8 +185,11 @@ int get_next_line(int fd, char **line)
 		if (ft_strchr(str[fd],'\n'))
 			break; 
 	}
-	//if (ret == 0)
-	//	return(0);
+	if (str[fd]==NULL && ret == 0)
+	{
+		*line = ft_strdup("");	
+		return(0);
+	}
 	int i;
 
 	i = 0;
@@ -159,19 +198,18 @@ int get_next_line(int fd, char **line)
 	{
 		i++;
 	}
+	*line = ft_substr(str[fd],0,i);
 	if(str[fd][i+1]=='\0') {
-		*line = ft_strdup("");
 		free(str[fd]);
 		str[fd] = NULL;
-		return 0;
+		return 1;
 	}
-	*line = ft_substr(str[fd],0,i);
 	char *tmp = ft_strdup(str[fd] + i + 1);
 	free(str[fd]);
 	str[fd] = tmp;
 	return (1);
 }
-
+#if 0
 int main(int argc, char **argv)
 {
 	int fd;
@@ -197,7 +235,7 @@ int main(int argc, char **argv)
 	}
 return 0;
 }
-
+#endif
 
 
 
