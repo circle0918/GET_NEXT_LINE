@@ -93,18 +93,24 @@ char			*ft_strjoin(char *s1, char *s2)
 	ft_strcpy(new + ft_strlen(s1), (char *)s2);
 	return (new);
 }
-
+#if 1
 char			*ft_substr(char *s, int start, int len)
 {
 	int	l;
 	char	*new;
 
-	if (!s || start >= ft_strlen(s))
+	if (!s || start > ft_strlen(s))
 		return (NULL);
 	if (start + len <= ft_strlen(s))
 		l = start + len + 1;
 	else
 		l = ft_strlen(s) - start + 1;
+	
+	if (start==len)
+	{
+		new = ft_strdup("");
+		return(new);
+	}
 	if (!(new = malloc(l*sizeof(char))))
 		return (NULL);
 int i = 0;
@@ -117,8 +123,8 @@ int i = 0;
 	//ft_strncpy(new, &s[start], l-1);
 	return (new);
 }
-
-/*void	ft_bzero(void *s, size_t n)
+#else
+void	ft_bzero(void *s, size_t n)
 {
 	unsigned char *str;
 
@@ -129,8 +135,8 @@ int i = 0;
 		str++;
 		n--;
 	}
-}*/
-/*static char		*ft_strnew(size_t size)
+}
+static char		*ft_strnew(size_t size)
 {
 	char	*s;
 
@@ -138,10 +144,10 @@ int i = 0;
 		return (NULL);
 	ft_bzero(s, size + 1);
 	return (s);
-}*/
+}
 
 
-/*char			*ft_substr(char  *s, int start, int len)
+char			*ft_substr(char  *s, int start, int len)
 {
 	int	i;
 	char	*tab;
@@ -161,10 +167,13 @@ int i = 0;
 		return (0);
 	ft_strncpy(tab, &s[start], len);
 	return (tab);
-}*/
+}
+#endif
+
 int get_next_line(int fd, char **line)
 {
 	int	ret;
+	int i;
 	static	char	*str[FD_SIZE];
 	char	buf[BUF_SIZE + 1];
 //	char *tmp;
@@ -185,29 +194,30 @@ int get_next_line(int fd, char **line)
 		if (ft_strchr(str[fd],'\n'))
 			break; 
 	}
-	if (str[fd]==NULL && ret == 0)
-	{
-		*line = ft_strdup("");	
+	if (ret == 0 && str[fd]==NULL)
 		return(0);
-	}
-	int i;
-
-	i = 0;
-//printf("out %s\n",str[fd]);
-	while (str[fd][i]!='\n')
+	if (ft_strchr(str[fd],'\n'))
 	{
-		i++;
-	}
-	*line = ft_substr(str[fd],0,i);
-	if(str[fd][i+1]=='\0') {
-		free(str[fd]);
-		str[fd] = NULL;
-		return 1;
-	}
+		i = 0;
+		while (str[fd][i]!='\n')
+			i++;
+		*line = ft_substr(str[fd],0,i);
+		
 	char *tmp = ft_strdup(str[fd] + i + 1);
 	free(str[fd]);
 	str[fd] = tmp;
 	return (1);
+	}
+	else
+	{
+		i = 0;
+		while (str[fd][i]!='\0')
+			i++;
+		*line = ft_substr(str[fd],0,i);
+		free(str[fd]);
+		str[fd]=NULL;
+		return (0);
+	}
 }
 #if 0
 int main(int argc, char **argv)
