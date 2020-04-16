@@ -32,5 +32,6 @@ char *ft_strjoin(char *s1, char *s2);
 char *ft_substr(char *s, int start, int len);
 int ft_strchr(char*s, char c);
 int		get_next_line(int fd, char **line);
+//void    ft_bzero(void *s, size_t n);
 
 #endif
