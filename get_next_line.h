@@ -21,7 +21,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 
-# define BUF_SIZE 4096
+# define BUF_SIZE 1
 # define FD_SIZE 1024
 
 int	ft_strlen(char *s);
