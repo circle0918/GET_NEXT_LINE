@@ -11,6 +11,16 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#if 0
+void ft_free(char *str)
+{
+	if(str != NULL)
+	{
+		free(str);
+		str = NULL;
+	}
+}
+#endif
  char        *ft_strnew(size_t size)
  {
      char        *s;
@@ -95,7 +105,7 @@ char			*ft_substr(char *s, size_t start, size_t len)
 {
 	size_t	l;
 	char	*new;
-
+	//size_t i;
 	if (!s || start > ft_strlen(s))
 		return (NULL);
 	if (start + len <= ft_strlen(s))
@@ -104,98 +114,30 @@ char			*ft_substr(char *s, size_t start, size_t len)
 		l = ft_strlen(s) - start + 1;
 	
 	if (start==len)
-	{
+	{ 
 		new = ft_strdup("");
 		return(new);
 	}
 	if (!(new = malloc(l*sizeof(char))))
 		return (NULL);
-size_t i = 0;
+	#if 0
+	i = 0;
 	new[l-1]='\0';
 	while(i<l-1){
 	new[i]=s[start];
 	i++;
-	start++;
-	}
-	//ft_strncpy(new, &s[start], l-1);
-	return (new);
-}
+	start++;}
 #else
-void	ft_bzero(void *s, size_t n)
-{
-	unsigned char *str;
-
-	str = s;
-	while (n)
-	{
-		*str = 0;
-		str++;
-		n--;
-	}
-}
-static char		*ft_strnew(size_t size)
-{
-	char	*s;
-
-	if (!(s = (char *)malloc(sizeof(char) * (size + 1))))
-		return (NULL);
-	ft_bzero(s, size + 1);
-	return (s);
-}
-
-
-char			*ft_substr(char  *s, int start, int len)
-{
-	int	i;
-	char	*tab;
-
-	if (!s)
-		return (0);
-	if (start > ft_strlen(s))
-	{
-		if (!(tab = ft_strnew(1)))
-			return (0);
-		return (tab);
-	}
-	i = 0;
-	while (s[start + i] && i < len)
-		i++;
-	if (!(tab = ft_strnew(i)))
-		return (0);
-	ft_strncpy(tab, &s[start], len);
-	return (tab);
+new = ft_strncpy(new,&s[start],l-1);
+new[l-1]='\0';
+#endif
+	return (new);
 }
 #endif
 
-int get_next_line(int fd, char **line)
+int ft_output(char **str, char **line, int ret, int fd)
 {
-	int	ret;
 	int i;
-	static	char	*str[FD_SIZE];
-	char	*buf;
-//	char *tmp;
-//memset(str,0,sizeof(str));
-//printf("%s",*line);
-if (!(buf = ft_strnew(BUFFER_SIZE)))
-	return(-1);
-	while ((ret = read(fd, buf, BUFFER_SIZE)) > 0)
-	{
-		//printf("%s\n",buf);
-		buf[ret] = '\0';
-		if (!str[fd])
-			str[fd] = ft_strdup(buf);
-		else
-		{
-			char * t = ft_strjoin(str[fd],buf);
-			free(str[fd]);
-			str[fd] = t;
-		}
-		if (ft_strchr(str[fd],'\n'))
-			break; 
-	}
-	free(buf);	
-	if (!line || fd<0 || ret<0 || BUFFER_SIZE<=0)
-		return(-1);
 	if (ret == 0 && str[fd]==NULL)
 	{
 		*line = ft_strdup("");	
@@ -223,6 +165,33 @@ if (!(buf = ft_strnew(BUFFER_SIZE)))
 		str[fd]=NULL;
 		return (0);
 	}
+}
+int get_next_line(int fd, char **line)
+{
+	int	ret;
+	static	char	*str[FD_SIZE];
+	char	*buf;
+if (!(buf = ft_strnew(BUFFER_SIZE)))
+	return(-1);
+	while ((ret = read(fd, buf, BUFFER_SIZE)) > 0)
+	{
+		//printf("%s\n",buf);
+		buf[ret] = '\0';
+		if (!str[fd])
+			str[fd] = ft_strdup(buf);
+		else
+		{
+			char * t = ft_strjoin(str[fd],buf);
+			free(str[fd]);
+			str[fd] = t;
+		}
+		if (ft_strchr(str[fd],'\n'))
+			break; 
+	}
+	free(buf);	
+	if (!line || fd<0 || ret<0 || BUFFER_SIZE<=0)
+		return(-1);
+	return (ft_output(str,line,ret,fd));
 }
 #if 0
 int main(int argc, char **argv)
