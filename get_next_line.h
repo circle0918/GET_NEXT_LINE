@@ -6,7 +6,7 @@
 /*   By: yyuan <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/05 13:31:24 by yyuan             #+#    #+#             */
-/*   Updated: 2020/01/05 18:20:50 by yyuan            ###   ########.fr       */
+/*   Updated: 2020/04/22 14:39:08 by yyuan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,24 +15,20 @@
 # define GET_NEXT_LINE_H
 
 # include <fcntl.h>
-# include <stdio.h>
-# include <ctype.h>
-# include <string.h>
 # include <stdlib.h>
 # include <unistd.h>
 
-//# define BUF_SIZE 1
 # define FD_SIZE 1024
 
-char        *ft_strnew(size_t size);
+char	*ft_strnew(size_t size);
 size_t	ft_strlen(char *s);
 char	*ft_strdup(char *s);
-char *ft_strcpy(char *d, char *s);
-char *ft_strncpy(char *dest, char *src, int c);
-char *ft_strjoin(char *s1, char *s2);
-char *ft_substr(char *s, size_t start, size_t len);
-int ft_strchr(char*s, char c);
+char	*ft_strcpy(char *d, char *s);
+char	*ft_strncpy(char *dest, char *src, int c);
+char	*ft_strjoin(char *s1, char *s2);
+char	*ft_substr(char *s, size_t start, size_t len);
+int		ft_strchr(char *s, char c);
 int		get_next_line(int fd, char **line);
-//void    ft_bzero(void *s, size_t n);
+int		ft_output(char **str, char **line, int ret, int fd);
 
 #endif
